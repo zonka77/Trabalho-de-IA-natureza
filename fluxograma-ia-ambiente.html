@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IA & Sustentabilidade - Fluxograma Interativo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #0f4c27 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            overflow-x: auto;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .stage {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .stage:nth-child(1) { animation-delay: 0.2s; }
+        .stage:nth-child(2) { animation-delay: 0.4s; }
+        .stage:nth-child(3) { animation-delay: 0.6s; }
+        .stage:nth-child(4) { animation-delay: 0.8s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .box {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            min-width: 250px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .box:hover::before {
+            left: 100%;
+        }
+
+        .box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .box.stage1 {
+            border-color: #ff6b6b;
+            background: linear-gradient(135deg, #ffe5e5 0%, #fff0f0 100%);
+        }
+
+        .box.stage1:hover {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            color: white;
+        }
+
+        .box.stage2 {
+            border-color: #4ecdc4;
+            background: linear-gradient(135deg, #e0f7f6 0%, #f0fffe 100%);
+        }
+
+        .box.stage2:hover {
+            background: linear-gradient(135deg, #4ecdc4 0%, #45b8af 100%);
+            color: white;
+        }
+
+        .box.stage3 {
+            border-color: #95e1d3;
+            background: linear-gradient(135deg, #e8f8f5 0%, #f0fffe 100%);
+        }
+
+        .box.stage3:hover {
+            background: linear-gradient(135deg, #95e1d3 0%, #7dd3c0 100%);
+            color: white;
+        }
+
+        .box.stage4 {
+            border-color: #2ecc71;
+            background: linear-gradient(135deg, #e8f8f1 0%, #f0fef7 100%);
+        }
+
+        .box.stage4:hover {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+
+        .box h3 {
+            font-size: 1.3em;
+            margin-bottom: 12px;
+            color: #333;
+            transition: color 0.3s ease;
+        }
+
+        .box p {
+            font-size: 0.95em;
+            color: #666;
+            line-height: 1.6;
+            transition: color 0.3s ease;
+        }
+
+        .box:hover h3,
+        .box:hover p {
+            color: white;
+        }
+
+        .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .arrow {
+            width: 3px;
+            height: 40px;
+            background: linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0.3));
+            position: relative;
+            margin: -20px 0;
+        }
+
+        .arrow::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 8px solid white;
+        }
+
+        .stage-label {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .multi-box-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.95em;
+            opacity: 0.8;
+        }
+
+        .info-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideInCenter 0.3s ease;
+        }
+
+        @keyframes slideInCenter {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-content h2 {
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-content p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            color: #999;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .benefits-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .benefits-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #555;
+        }
+
+        .benefits-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .box {
+                min-width: 200px;
+                padding: 15px;
+            }
+
+            .multi-box-container {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                padding: 25px;
+                margin: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 IA & Sustentabilidade</h1>
+            <p>Como a Inteligência Artificial Pode Transformar o Cuidado Ambiental</p>
+        </div>
+
+        <div class="flowchart">
+            <!-- Etapa 1: Desafios -->
+            <div class="stage">
+                <div class="stage-label">Etapa 1: Desafios Ambientais</div>
+            </div>
+            <div class="stage">
+                <div class="multi-box-container">
+                    <div class="box stage1" onclick="showModal('desafio1')">
+                        <div class="icon">🌡️</div>
+                        <h3>Mudanças Climáticas</h3>
+                        <p>Aquecimento global e emissões de carbono</p>
+                    </div>
+                    <div class="box stage1" onclick="showModal('desafio2')">
+                        <div class="icon">🌊</div>
+                        <h3>Poluição da Água</h3>
+                        <p>Contaminação dos oceanos e rios</p>
+                    </div>
+                    <div class="box stage1" onclick="showModal('desafio3')">
+                        <div class="icon">🌳</div>
+                        <h3>Desmatamento</h3>
+                        <p>Perda de biodiversidade e habitats</p>
+                    </div>
+                    <div class="box stage1" onclick="showModal('desafio4')">
+                        <div class="icon">♻️</div>
+                        <h3>Resíduos</h3>
+                        <p>Gestão inadequada de resíduos</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow"></div>
+
+            <!-- Etapa 2: Soluções de IA -->
+            <div class="stage">
+                <div class="stage-label">Etapa 2: Tecnologias de IA</div>
+            </div>
+            <div class="stage">
+                <div class="multi-box-container">
+                    <div class="box stage2" onclick="showModal('ia1')">
+                        <div class="icon">🤖</div>
+                        <h3>Machine Learning</h3>
+                        <p>Análise de padrões ambientais</p>
+                    </div>
+                    <div class="box stage2" onclick="showModal('ia2')">
+                        <div class="icon">📡</div>
+                        <h3>Satélites & Sensores</h3>
+                        <p>Monitoramento em tempo real</p>
+                    </div>
+                    <div class="box stage2" onclick="showModal('ia3')">
+                        <div class="icon">🧠</div>
+                        <h3>Redes Neurais</h3>
+                        <p>Previsão e otimização</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow"></div>
+
+            <!-- Etapa 3: Aplicações Práticas -->
+            <div class="stage">
+                <div class="stage-label">Etapa 3: Aplicações Práticas</div>
+            </div>
+            <div class="stage">
+                <div class="multi-box-container">
+                    <div class="box stage3" onclick="showModal('app1')">
+                        <div class="icon">🌾</div>
+                        <h3>Agricultura Inteligente</h3>
+                        <p>Otimização de recursos e produção</p>
+                    </div>
+                    <div class="box stage3" onclick="showModal('app2')">
+                        <div class="icon">⚡</div>
+                        <h3>Energia Renovável</h3>
+                        <p>Gestão eficiente de energia limpa</p>
+                    </div>
+                    <div class="box stage3" onclick="showModal('app3')">
+                        <div class="icon">🌲</div>
+                        <h3>Conservação</h3>
+                        <p>Proteção de ecossistemas</p>
+                    </div>
+                    <div class="box stage3" onclick="showModal('app4')">
+                        <div class="icon">🏭</div>
+                        <h3>Indústria 4.0</h3>
+                        <p>Produção sustentável e eficiente</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arrow"></div>
+
+            <!-- Etapa 4: Resultados -->
+            <div class="stage">
+                <div class="stage-label">Etapa 4: Impacto Positivo</div>
+            </div>
+            <div class="stage">
+                <div class="multi-box-container">
+                    <div class="box stage4" onclick="showModal('resultado1')">
+                        <div class="icon">🌱</div>
+                        <h3>Sustentabilidade</h3>
+                        <p>Desenvolvimento equilibrado e duradouro</p>
+                    </div>
+                    <div class="box stage4" onclick="showModal('resultado2')">
+                        <div class="icon">💚</div>
+                        <h3>Saúde Planetária</h3>
+                        <p>Restauração dos ecossistemas</p>
+                    </div>
+                    <div class="box stage4" onclick="showModal('resultado3')">
+                        <div class="icon">👥</div>
+                        <h3>Qualidade de Vida</h3>
+                        <p>Futuro melhor para a humanidade</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Clique em qualquer caixa para mais informações sobre esse tema 📚</p>
+            <p style="margin-top: 15px; opacity: 0.6;">Projeto de IA & Sustentabilidade | 2026</p>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal" class="info-modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        const modalData = {
+            desafio1: {
+                title: '🌡️ Mudanças Climáticas',
+                content: '<p>O aquecimento global é um dos maiores desafios da humanidade. Causado principalmente por emissões de gases de efeito estufa, afeta todo o planeta.</p><ul class="benefits-list"><li>Aumento da temperatura média global</li><li>Eventos climáticos extremos</li><li>Alterações nos padrões de chuva</li><li>Impacto na biodiversidade</li></ul>'
+            },
+            desafio2: {
+                title: '🌊 Poluição da Água',
+                content: '<p>Os oceanos e rios sofrem com contaminação por plásticos, produtos químicos e resíduos industriais, afetando a vida marinha e terrestre.</p><ul class="benefits-list"><li>Contaminação de aquíferos</li><li>Morte de vida marinha</li><li>Redução de água potável</li><li>Ecossistemas degradados</li></ul>'
+            },
+            desafio3: {
+                title: '🌳 Desmatamento',
+                content: '<p>A perda de florestas reduz a biodiversidade, libera carbono e afeta o equilíbrio climático do planeta.</p><ul class="benefits-list"><li>Perda de habitats naturais</li><li>Extinção de espécies</li><li>Redução de oxigênio</li><li>Erosão do solo</li></ul>'
+            },
+            desafio4: {
+                title: '♻️ Gestão de Resíduos',
+                content: '<p>A produção desenfreada de lixo, especialmente plástico, sobrecarrega os aterros e contamina o meio ambiente.</p><ul class="benefits-list"><li>Acúmulo de plástico</li><li>Contaminação do solo</li><li>Impacto visual em ecossistemas</li><li>Toxinas em alimentos</li></ul>'
+            },
+            ia1: {
+                title: '🤖 Machine Learning',
+                content: '<p>Algoritmos que aprendem com dados ambientais para identificar padrões e fazer previsões precisas.</p><ul class="benefits-list"><li>Análise de dados climáticos</li><li>Predição de desastres naturais</li><li>Otimização de recursos</li><li>Identificação de anomalias</li></ul>'
+            },
+            ia2: {
+                title: '📡 Satélites & Sensores',
+                content: '<p>Tecnologias que monitoram o planeta em tempo real, fornecendo dados críticos sobre saúde ambiental.</p><ul class="benefits-list"><li>Monitoramento de florestas</li><li>Medição de qualidade do ar</li><li>Detecção de poluição</li><li>Rastreamento de mudanças climáticas</li></ul>'
+            },
+            ia3: {
+                title: '🧠 Redes Neurais',
+                content: '<p>Sistemas que simulam o cérebro humano para processar informações complexas e fazer previsões.</p><ul class="benefits-list"><li>Previsão de safras</li><li>Otimização de energia</li><li>Classificação de imagens ambientais</li><li>Previsão de eventos climáticos</li></ul>'
+            },
+            app1: {
+                title: '🌾 Agricultura Inteligente',
+                content: '<p>A IA revoluciona a agricultura, tornando-a mais eficiente e sustentável.</p><ul class="benefits-list"><li>Irrigação otimizada (40-60% economia de água)</li><li>Detecção de pragas por IA</li><li>Previsão de rendimento de colheitas</li><li>Redução de pesticidas</li></ul>'
+            },
+            app2: {
+                title: '⚡ Energia Renovável',
+                content: '<p>A IA gerencia sistemas de energia solar, eólica e outras fontes limpas de forma otimizada.</p><ul class="benefits-list"><li>Previsão de produção solar/eólica</li><li>Gerenciamento inteligente de rede</li><li>Redução de desperdício</li><li>Armazenamento eficiente de energia</li></ul>'
+            },
+            app3: {
+                title: '🌲 Conservação',
+                content: '<p>Tecnologias que protegem ecossistemas e espécies ameaçadas de extinção.</p><ul class="benefits-list"><li>Monitoramento de animais selvagens</li><li>Detecção de caça ilegal</li><li>Proteção de habitats críticos</li><li>Restauração de florestas</li></ul>'
+            },
+            app4: {
+                title: '🏭 Indústria 4.0',
+                content: '<p>Fábricas inteligentes que reduzem resíduos e emissões enquanto mantêm produtividade.</p><ul class="benefits-list"><li>Otimização de processos</li><li>Redução de emissões de carbono</li><li>Economia de água e materiais</li><li>Reciclagem inteligente</li></ul>'
+            },
+            resultado1: {
+                title: '🌱 Sustentabilidade',
+                content: '<p>O desenvolvimento sustentável equilibra crescimento econômico com proteção ambiental para futuras gerações.</p><ul class="benefits-list"><li>Recursos renováveis e explorados responsavelmente</li><li>Economia circular</li><li>Redução de pegada de carbono</li><li>Desenvolvimento equilibrado</li></ul>'
+            },
+            resultado2: {
+                title: '💚 Saúde Planetária',
+                content: '<p>Um planeta saudável é fundamental para a sobrevivência de todas as espécies, incluindo a humanidade.</p><ul class="benefits-list"><li>Ecossistemas restaurados</li><li>Biodiversidade preservada</li><li>Ar e água limpos</li><li>Clima estável</li></ul>'
+            },
+            resultado3: {
+                title: '👥 Qualidade de Vida',
+                content: '<p>Um ambiente saudável resulta em melhor qualidade de vida para pessoas em todo o mundo.</p><ul class="benefits-list"><li>Ar mais puro para respirar</li><li>Água potável abundante</li><li>Alimentos mais nutritivos</li><li>Cidades mais verdes e saudáveis</li></ul>'
+            }
+        };
+
+        function showModal(key) {
+            const data = modalData[key];
+            if (data) {
+                document.getElementById('modal-body').innerHTML = `
+                    <h2>${data.title}</h2>
+                    ${data.content}
+                `;
+                document.getElementById('modal').style.display = 'flex';
+            }
+        }
+
+        function closeModal(event) {
+            if (event && event.target.id !== 'modal') return;
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Fechar modal ao pressionar ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
